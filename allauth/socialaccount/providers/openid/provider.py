@@ -18,12 +18,15 @@ class OpenIDAccount(ProviderAccount):
         domain = urlparse(self.account.uid).netloc
         # FIXME: Instead of hardcoding, derive this from the domains
         # listed in the openid endpoints setting.
-        provider_map = {'yahoo': dict(id='yahoo',
-                                      name='Yahoo'),
-                        'hyves': dict(id='hyves',
-                                      name='Hyves'),
-                        'google': dict(id='google',
-                                       name='Google')}
+        provider_map = {provider['id']: provider
+                        for provider in self.provider_map.get('SERVERS') or []}
+        if not provider_map:
+            provider_map = {'yahoo': dict(id='yahoo',
+                                          name='Yahoo'),
+                            'hyves': dict(id='hyves',
+                                          name='Hyves'),
+                            'google': dict(id='google',
+                                           name='Google')}
         for d, p in provider_map.items():
             if domain.lower().find(d) >= 0:
                 ret = p
