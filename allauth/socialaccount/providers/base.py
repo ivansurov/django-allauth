@@ -166,6 +166,8 @@ class Provider(object):
 class ProviderAccount(object):
     def __init__(self, social_account):
         self.account = social_account
+        self.provider = self.account.get_provider()
+        self.provider_map = app_settings.PROVIDERS.get(self.provider.id) or {}
 
     def get_profile_url(self):
         return None
@@ -183,9 +185,8 @@ class ProviderAccount(object):
         OpenID however, the brand can derived from the OpenID identity
         url.
         """
-        provider = self.account.get_provider()
-        return dict(id=provider.id,
-                    name=provider.name)
+        return dict(id=self.provider.id,
+                    name=self.provider.name)
 
     def __str__(self):
         return self.to_str()
